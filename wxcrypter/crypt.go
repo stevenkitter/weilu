@@ -43,14 +43,14 @@ func (e *Encrypter) Encrypt(replyMsg []byte, timestamp, nonce string) (b []byte,
 }
 
 //Decrypt decrypt msg
-func (e *Encrypter) Decrypt(msgSignature, timestamp, nonce string, data []byte) (b []byte, err error) {
-	reqXML, err := ParseRequestXML(data)
+func (e *Encrypter) Decrypt(data []byte) (b []byte, err error) {
+	reqXML, err := ParseEncRequestXML(data)
 	if err != nil {
 		return
 	}
 
-	signature := Sha1(e.token, timestamp, nonce, reqXML.Encrypt)
-	if signature != msgSignature {
+	signature := Sha1(e.token, reqXML.TimeStamp, reqXML.Nonce, reqXML.Encrypt)
+	if signature != reqXML.MsgSignature {
 		err = ErrorValidateSignature
 		return
 	}

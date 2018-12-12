@@ -2,11 +2,12 @@ package wx
 
 import (
 	"context"
+	"log"
 
-	"github.com/stevenkitter/weilu/wxcrypter"
 	"github.com/jinzhu/gorm"
 	bapb "github.com/stevenkitter/protorepo/base"
 	wlpb "github.com/stevenkitter/protorepo/weilu"
+	"github.com/stevenkitter/weilu/wxcrypter"
 )
 
 //Server wx server
@@ -16,26 +17,22 @@ type Server struct {
 
 //DecryptMsg decrypt tencent incoming message
 func (s *Server) DecryptMsg(ctx context.Context, req *wlpb.WXEncryptedMessage) (*bapb.Resp, error) {
-	bts := []byte{req.msg}
-	var resXML wxcrypter.EncryptedResponseXML
-	err = xml.Unmarshal(bts, &resXML)
+	e, err := wxcrypter.NewEncrypter(wxcrypter.Token, wxcrypter.EncodingAESKey, wxcrypter.AppID)
 	if err != nil {
-		log.Printf("xml.Unmarshal err : %v", err)
-		return
+		log.Printf("NewEncrypter err : %v", err)
+		return nil, err
 	}
-	encrypt := resXML.Encrypt
-	msgSignature := resXML.MsgSignature
-	format := "<xml><ToUserName><![CDATA[toUser]]></ToUserName><Encrypt><![CDATA[%s]]></Encrypt></xml>"
-	fromXML := fmt.Sprintf(format, encrypt)
-	b, err = e.Decrypt(msgSignature, timestamp, nonce, []byte(fromXML))
+	b, err := e.Decrypt([]byte(req.Msg))
 	if err != nil {
-		fmt.Println(err)
-		return
+		log.Printf("e.Decrypt err : %v", err)
+		return nil, err
 	}
-	// fmt.Printf("e.Decrypt msg : %s \n", string(b))
-	if string(b) != text {
-		t.Errorf("expected text but get %s", string(b))
+	resp := &bapb.Resp{
+		Code: 200,
+		Msg:  "",
+		Data: string(b),
 	}
+	return resp, nil
 }
 
 //TicketReceived tencent ticket hander
