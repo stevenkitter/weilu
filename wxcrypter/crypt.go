@@ -35,25 +35,18 @@ func (e *Encrypter) Encrypt(replyMsg []byte, timestamp, nonce string) (b []byte,
 	if err != nil {
 		return
 	}
-
 	signature := Sha1(e.token, timestamp, nonce, encrypt)
-
 	b, err = GenerateResponseXML(encrypt, signature, timestamp, nonce)
 	return
 }
 
 //Decrypt decrypt msg
-func (e *Encrypter) Decrypt(data []byte) (b []byte, err error) {
-	reqXML, err := ParseEncRequestXML(data)
-	if err != nil {
-		return
-	}
-
-	signature := Sha1(e.token, reqXML.TimeStamp, reqXML.Nonce, reqXML.Encrypt)
-	if signature != reqXML.MsgSignature {
+func (e *Encrypter) Decrypt(data []byte, msgSignature, timestamp, nonce string) (b []byte, err error) {
+	signature := Sha1(e.token, timestamp, nonce, string(data))
+	if signature != msgSignature {
 		err = ErrorValidateSignature
 		return
 	}
-	b, err = e.prpcrypter.Decrypt(e.appID, reqXML.Encrypt)
+	b, err = e.prpcrypter.Decrypt(e.appID, string(data))
 	return
 }

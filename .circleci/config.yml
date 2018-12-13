@@ -1,0 +1,61 @@
+# Golang CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-go/ for more details
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:1.11
+    working_directory: /go/src/github.com/stevenkitter/weilu
+    parallelism: 1
+    steps:
+      - checkout
+      - run: go get -v -t -d ./...
+      - run:
+          name: build services wx to app
+          command: |
+            cd services/wx
+            CGO_ENABLED=0 GOOS=linux go build -o app .
+
+      - setup_remote_docker:
+          docker_layer_caching: false
+      - run:
+          name: push services wx to tencent image
+          command: |
+            cd services/wx
+            docker build -t ccr.ccs.tencentyun.com/julu/weilu_wx .
+            docker login -u 100000776220 -p wangxu226 ccr.ccs.tencentyun.com
+            docker push ccr.ccs.tencentyun.com/julu/weilu_wx
+      - run:
+          name: run the micro services
+          command: |
+            cd services
+            docker network create internal
+            docker-compose -f docker-compose-test.yml up -d
+      - run: go test -v ./...
+  deploy:
+    machine:
+      enable: true
+    working_directory: ~/julu
+    environment:
+      JULU_PATH: "/home/ubuntu/production/julu"
+    steps:
+      - checkout
+      - run:
+          name: Deploy over ssh
+          command: |
+            ls
+            scp docker-compose.yml $SSH_USER@$SSH_HOST:$JULU_PATH
+            scp deploy.sh $SSH_USER@$SSH_HOST:$JULU_PATH
+            ssh $SSH_USER@$SSH_HOST "cd $JULU_PATH && sh deploy.sh"
+workflows:
+  version: 2
+  build_deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master

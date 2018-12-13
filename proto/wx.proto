@@ -1,0 +1,28 @@
+syntax = "proto3";
+package proto;
+option go_package = "github.com/stevenkitter/weilu/proto";
+
+// WXMessage incoimg body message
+message WXEncryptedMessage {
+  string msg = 1;
+  string msgSignature = 2;
+  string timestamp = 3;
+  string nonce = 4;
+}
+// WXTicketReq save the decrypted message
+message WXTicketReq {
+  string appID = 1;
+  string infoType = 2;
+  string componet = 3;
+}
+
+message Resp {
+  int32 code = 1;
+  string msg = 2;
+  string data = 3;
+}
+
+service WXService {
+  rpc DecryptMsg(WXEncryptedMessage) returns (Resp);
+  rpc TicketReceived(WXTicketReq) returns (Resp);
+}

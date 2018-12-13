@@ -2,15 +2,16 @@ package database
 
 import (
 	"log"
+	"os"
 
 	"github.com/jinzhu/gorm"
 )
 
-const (
+var (
 	//WXUSER mysql user name
-	WXUSER = "wx"
+	WXUSER = os.Getenv("WX_MYSQL_USER")
 	//WXPASSWORD mysql password
-	WXPASSWORD = "AxpYFTrjmlmjb1wq"
+	WXPASSWORD = os.Getenv("WX_MYSQL_PASSWORD")
 )
 
 //WXDB sms db
@@ -25,5 +26,5 @@ func WXDB() (*gorm.DB, error) {
 }
 
 func migrate(db *gorm.DB) {
-	// db.AutoMigrate(&SMS{})
+	db.AutoMigrate(&WXComponent{})
 }
