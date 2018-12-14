@@ -23,11 +23,13 @@ func TestCrypt(t *testing.T) {
 		log.Printf("NewEncrypter err : %v", err)
 		return
 	}
+
 	b, err := e.Encrypt([]byte(text), timestamp, nonce)
 	if err != nil {
 		log.Printf("e.Encrypt err : %v", err)
 		return
 	}
+	fmt.Println(string(b))
 	// fmt.Printf("encrypt msg : %s \n", string(b))
 	var resXML EncryptedResponseXML
 	err = xml.Unmarshal(b, &resXML)
@@ -37,9 +39,9 @@ func TestCrypt(t *testing.T) {
 	}
 	encrypt := resXML.Encrypt
 	msgSignature := resXML.MsgSignature
-	format := "<xml><ToUserName><![CDATA[toUser]]></ToUserName><Encrypt><![CDATA[%s]]></Encrypt></xml>"
-	fromXML := fmt.Sprintf(format, encrypt)
-	b, err = e.Decrypt(msgSignature, timestamp, nonce, []byte(fromXML))
+	// format := "<xml><ToUserName><![CDATA[toUser]]></ToUserName><Encrypt><![CDATA[%s]]></Encrypt></xml>"
+	// fromXML := fmt.Sprintf(format, encrypt)
+	b, err = e.Decrypt([]byte(encrypt), msgSignature, timestamp, nonce)
 	if err != nil {
 		fmt.Println(err)
 		return

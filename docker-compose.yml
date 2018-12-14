@@ -1,0 +1,38 @@
+version: "2"
+
+services:
+  #mariadb
+  mariadb:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: "123123"
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: test1
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+    expose:
+      - 3306
+    networks:
+      - internal
+    volumes:
+      - $PWD/script_mysql_init:/docker-entrypoint-initdb.d
+
+  # julu weilu wx server
+  julu_weilu_wx:
+    image: ccr.ccs.tencentyun.com/julu/weilu_wx
+    expose:
+      - 51001
+    environment:
+      MYSQL_URL: "mariadb:3306"
+      WX_MYSQL_USER: "wx"
+      WX_MYSQL_PASSWORD: ${WX_MYSQL_PASSWORD}
+      WX_DATABASE: "wx"
+    networks:
+      - internal
+    restart: on-failure
+    depends_on:
+      - mariadb
+networks:
+  internal:
+    external: true

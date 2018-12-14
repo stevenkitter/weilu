@@ -1,0 +1,15 @@
+version: "2"
+
+services:
+  # julu sms server
+  julu_weilu_wx:
+    image: ccr.ccs.tencentyun.com/julu/weilu_wx
+    expose:
+      - "51001"
+    environment:
+      MYSQL_URL: mariadb:3306
+    networks:
+      - internal
+networks:
+  internal:
+    external: true
