@@ -14,8 +14,6 @@ services:
     networks:
       - internal
     restart: on-failure
-    depends_on:
-      - mariadb
 networks:
   internal:
     external: true
