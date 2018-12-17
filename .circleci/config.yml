@@ -38,6 +38,7 @@ jobs:
           command: |
             cd services/wx
             nohub ./app &
+            ps -aux
       - run: go test -v ./...
 
       - setup_remote_docker:
