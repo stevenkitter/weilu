@@ -39,6 +39,7 @@ jobs:
             cd services/wx
             ./app &
             ps -aux
+            lsof -i :51001
       - run: go test -v ./...
 
       - setup_remote_docker:
