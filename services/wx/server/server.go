@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net"
 
@@ -45,7 +44,6 @@ func (s *Server) DecryptMsg(ctx context.Context, req *pb.WXEncryptedMessage) (*p
 		log.Printf("NewEncrypter err : %v", err)
 		return nil, err
 	}
-	fmt.Printf("req.Msg %s", req.Msg)
 	b, err := e.Decrypt([]byte(req.Msg), req.MsgSignature, req.Timestamp, req.Nonce)
 	if err != nil {
 		log.Printf("e.Decrypt err : %v", err)
