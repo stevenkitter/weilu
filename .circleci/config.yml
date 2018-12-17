@@ -39,6 +39,7 @@ jobs:
             docker ps
             sleep 30
             docker ps
+            docker-compose logs
       - run: go test -v ./...
   deploy:
     machine:
