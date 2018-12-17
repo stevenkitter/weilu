@@ -74,7 +74,7 @@ jobs:
             ls
             scp docker-compose.yml $SSH_USER@$SSH_HOST:$JULU_PATH
             scp deploy.sh $SSH_USER@$SSH_HOST:$JULU_PATH
-            ssh $SSH_USER@$SSH_HOST "cd $JULU_PATH && sh deploy.sh"
+            ssh $SSH_USER@$SSH_HOST "export WX_MYSQL_PASSWORD=${WX_MYSQL_PASSWORD} && cd $JULU_PATH && sh deploy.sh"
 workflows:
   version: 2
   build_deploy:
