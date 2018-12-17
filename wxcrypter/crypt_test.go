@@ -29,7 +29,6 @@ func TestCrypt(t *testing.T) {
 		log.Printf("e.Encrypt err : %v", err)
 		return
 	}
-	fmt.Println(string(b))
 	// fmt.Printf("encrypt msg : %s \n", string(b))
 	var resXML EncryptedResponseXML
 	err = xml.Unmarshal(b, &resXML)
