@@ -37,7 +37,7 @@ jobs:
           name: run the micro services
           command: |
             cd services/wx
-            nohub ./app &
+            ./app &
             ps -aux
       - run: go test -v ./...
 
