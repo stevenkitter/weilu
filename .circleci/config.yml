@@ -37,7 +37,7 @@ jobs:
           name: run the micro services
           command: |
             cd services/wx
-            ./app
+            nohub ./app &
       - run: go test -v ./...
 
       - setup_remote_docker:
