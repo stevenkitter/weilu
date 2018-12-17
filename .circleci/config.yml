@@ -41,9 +41,8 @@ jobs:
       - run:
           name: run the micro services
           command: |
-            cd services/wx
-            echo "#\!/bin/sh \n./app &" > app.sh
-            sh ./app.sh
+            echo "#\!/bin/sh \n./app &" > ./services/wx/app.sh
+            sh ./services/wx/app.sh
             ls -al
             export WX_SERVER_ADDRESS=127.0.0.1:51001
             sleep 30
