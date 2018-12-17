@@ -37,8 +37,8 @@ jobs:
             docker-compose up -d
             echo "Wait for server started - sleeping"
             docker ps
-            sleep 30
-            docker ps
+            sleep 60
+            docker ps1
             docker-compose logs
       - run: go test -v ./...
   deploy:
