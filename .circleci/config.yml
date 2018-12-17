@@ -43,7 +43,8 @@ jobs:
       - run:
           name: test golang
           command: |
-            export WX_SERVER_ADDRESS=::1:51001
+            export WX_SERVER_ADDRESS=127.0.0.1:51001
+            sleep 30
             go test -v ./...
 
       - setup_remote_docker:

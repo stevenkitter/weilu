@@ -20,6 +20,7 @@ var (
 
 //DecryptMsg decryp msg
 func (c *Client) DecryptMsg(req *pb.WXEncryptedMessage) (*pb.Resp, error) {
+
 	conn, err := grpc.Dial(WXAddress, grpc.WithInsecure())
 	if err != nil {
 		return nil, err
