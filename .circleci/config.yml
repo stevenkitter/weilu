@@ -34,6 +34,7 @@ jobs:
             cd services
             docker network create internal
             docker-compose up -d
+            docker ps
       - run: go test -v ./...
   deploy:
     machine:

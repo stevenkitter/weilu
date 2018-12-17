@@ -20,7 +20,7 @@ func TestDecryptMsg(t *testing.T) {
 	cl := client.Client{}
 	res, err := cl.DecryptMsg(decryptMsgReq)
 	if err != nil {
-		t.Errorf("mocking failed Err: %v", err)
+		t.Errorf("cl.DecryptMsg failed Err: %v", err)
 	}
 	if res.Data != expected {
 		t.Errorf("expected %s, but get %s", expected, res.Data)
