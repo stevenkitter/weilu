@@ -34,7 +34,11 @@ services:
       WX_DATABASE: "wx"
     networks:
       - internal
+    volumes:
+      - $PWD/wait_for.sh:/root/
+    command: ["./wait_for.sh", "mariadb:3306", "--", "./app"]
     restart: on-failure
+
     depends_on:
       - mariadb
 networks:
