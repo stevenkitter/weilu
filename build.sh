@@ -7,7 +7,7 @@ workspace=$PWD
 export WX_MYSQL_USER=wx
 export WX_MYSQL_PASSWORD=rWk1hvqMT62K2JYH
 export WX_DATABASE=wx
-export WX_SERVER_ADDRESS=localhost:51001
+export WX_SERVER_ADDRESS=localhost:51001 # ::1
 ## docker
 export DOCKER_PASSWORD=wangxu226
 
