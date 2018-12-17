@@ -37,12 +37,14 @@ jobs:
           name: run the micro services
           command: |
             cd services/wx
-            ./app &
+            echo "#\!/bin/sh \n./app &" > app.sh
+            sh app.sh
             ps -aux
             netstat -an | grep 51001
       - run:
           name: test golang
           command: |
+            ps -aux
             netstat -an | grep 51001
             export WX_SERVER_ADDRESS=127.0.0.1:51001
             sleep 30
