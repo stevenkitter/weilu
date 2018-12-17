@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"os"
 
 	pb "github.com/stevenkitter/weilu/proto"
 
@@ -12,9 +13,9 @@ import (
 type Client struct {
 }
 
-const (
+var (
 	//WXAddress wx server address
-	WXAddress = "localhost:51001"
+	WXAddress = os.Getenv("WX_SERVER_ADDRESS")
 )
 
 //DecryptMsg decryp msg

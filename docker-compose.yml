@@ -13,6 +13,8 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: "true"
     expose:
       - 3306
+    ports:
+      - "3306:3306"
     networks:
       - internal
     volumes:
@@ -23,6 +25,8 @@ services:
     image: ccr.ccs.tencentyun.com/julu/weilu_wx
     expose:
       - 51001
+    ports:
+      - "51001:51001"
     environment:
       MYSQL_URL: "mariadb:3306"
       WX_MYSQL_USER: "wx"
