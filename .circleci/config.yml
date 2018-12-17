@@ -48,7 +48,6 @@ jobs:
       - run:
           name: test golang
           command: |
-            netstat -an | grep 51001
             export WX_SERVER_ADDRESS=127.0.0.1:51001
             sleep 30
             go test -v ./...
