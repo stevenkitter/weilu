@@ -17,6 +17,8 @@ jobs:
       WX_SERVER_ADDRESS: "localhost:51001"
       WX_MYSQL_PASSWORD: rWk1hvqMT62K2JYH
       MYSQL_URL: "localhost:3306"
+      WX_MYSQL_USER: "wx"
+      WX_DATABASE: "wx"
     steps:
       - checkout
       - run: go get -v -t -d ./...
@@ -52,16 +54,16 @@ jobs:
       enable: true
     working_directory: ~/julu
     environment:
-      JULU_WEILU_PATH: "/home/ubuntu/production/julu/weilu"
+      JULU_PATH: "/home/ubuntu/production/julu"
     steps:
       - checkout
       - run:
           name: Deploy over ssh
           command: |
             ls
-            scp docker-compose.yml $SSH_USER@$SSH_HOST:$JULU_WEILU_PATH
-            scp deploy.sh $SSH_USER@$SSH_HOST:$JULU_WEILU_PATH
-            ssh $SSH_USER@$SSH_HOST "cd $JULU_WEILU_PATH && sh deploy.sh"
+            scp docker-compose.yml $SSH_USER@$SSH_HOST:$JULU_PATH
+            scp deploy.sh $SSH_USER@$SSH_HOST:$JULU_PATH
+            ssh $SSH_USER@$SSH_HOST "cd $JULU_PATH && sh deploy.sh"
 workflows:
   version: 2
   build_deploy:
