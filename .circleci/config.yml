@@ -43,9 +43,11 @@ jobs:
           command: |
             cd services/wx
             ./app
+          background: true
       - run:
           name: test golang
           command: |
+            sleep 10
             export WX_SERVER_ADDRESS=127.0.0.1:51001
             go test -v ./...
 
