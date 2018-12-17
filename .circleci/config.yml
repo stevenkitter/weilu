@@ -34,6 +34,9 @@ jobs:
             cd services
             docker network create internal
             docker-compose up -d
+            echo "Wait for server started - sleeping"
+            docker ps
+            sleep 30
             docker ps
       - run: go test -v ./...
   deploy:
