@@ -43,8 +43,8 @@ jobs:
           command: |
             cd services/wx
             echo "#\!/bin/sh \n./app &" > app.sh
-            sh app.sh
-            ps -aux
+            sh ./app.sh
+            ls -al
       - run:
           name: test golang
           command: |
