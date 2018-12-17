@@ -41,18 +41,13 @@ jobs:
       - run:
           name: run the micro services
           command: |
-            echo "#\!/bin/sh \n./app &" > ./services/wx/app.sh
-            sh ./services/wx/app.sh
-            ls -al
+            cd services/wx
+            ./app
+      - run:
+          name: test golang
+          command: |
             export WX_SERVER_ADDRESS=127.0.0.1:51001
-            sleep 30
             go test -v ./...
-      # - run:
-      #     name: test golang
-      #     command: |
-      #       export WX_SERVER_ADDRESS=127.0.0.1:51001
-      #       sleep 30
-      #       go test -v ./...
 
       - setup_remote_docker:
           docker_layer_caching: false
