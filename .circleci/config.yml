@@ -6,19 +6,36 @@ jobs:
   build:
     docker:
       - image: circleci/golang:1.11
+      - image: mariadb
+        environment:
+          MYSQL_ROOT_PASSWORD: "123123"
+          MYSQL_ROOT_HOST: "%"
+          MYSQL_ALLOW_EMPTY_PASSWORD: "true"
     working_directory: /go/src/github.com/stevenkitter/weilu
     parallelism: 1
     environment:
       WX_SERVER_ADDRESS: "localhost:51001"
       WX_MYSQL_PASSWORD: rWk1hvqMT62K2JYH
+      MYSQL_URL: "localhost:3306"
     steps:
       - checkout
       - run: go get -v -t -d ./...
+      - run:
+          name: init mysql
+          command: |
+            sh ./script_mysql_init/init.sh
       - run:
           name: build services wx to app
           command: |
             cd services/wx
             CGO_ENABLED=0 GOOS=linux go build -o app .
+
+      - run:
+          name: run the micro services
+          command: |
+            cd services/wx
+            ./app
+      - run: go test -v ./...
 
       - setup_remote_docker:
           docker_layer_caching: false
@@ -29,18 +46,6 @@ jobs:
             docker build -t ccr.ccs.tencentyun.com/julu/weilu_wx .
             docker login -u 100000776220 -p wangxu226 ccr.ccs.tencentyun.com
             docker push ccr.ccs.tencentyun.com/julu/weilu_wx
-      - run:
-          name: run the micro services
-          command: |
-            cd services
-            docker network create internal
-            docker-compose up -d
-            echo "Wait for server started - sleeping"
-            docker ps
-            sleep 60
-            docker ps
-            docker-compose logs
-      - run: go test -v ./...
   deploy:
     machine:
       enable: true

@@ -28,7 +28,7 @@ services:
     ports:
       - "51001:51001"
     environment:
-      MYSQL_URL: "mariadb:3306"
+      MYSQL_URL: ${MYSQL_URL}
       WX_MYSQL_USER: "wx"
       WX_MYSQL_PASSWORD: ${WX_MYSQL_PASSWORD}
       WX_DATABASE: "wx"
