@@ -50,13 +50,12 @@ func TestDecryptMsg(t *testing.T) {
 	mockWXClient.EXPECT().DecryptMsg(
 		context.Background(),
 		&rpcMsg{msg: decryptMsgReq},
-	).Return(&pb.Resp{Code: 300, Data: decrypted}, nil)
+	).Return(&pb.Resp{Code: 200, Data: decrypted}, nil)
 	testDecryptMsg(t, mockWXClient)
 }
 
 func testDecryptMsg(t *testing.T, client pb.WXServiceClient) {
 	r, err := client.DecryptMsg(context.Background(), decryptMsgReq)
-	fmt.Println(r)
 	if err != nil || r.Code != 200 || r.Data != decrypted {
 		t.Errorf("mocking failed")
 	}
