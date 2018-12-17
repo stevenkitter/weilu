@@ -18,7 +18,7 @@ services:
     networks:
       - internal
     volumes:
-      - $PWD/script_mysql_init:/docker-entrypoint-initdb.d
+      - ./script_mysql_init:/docker-entrypoint-initdb.d
 
   # julu weilu wx server
   julu_weilu_wx:
