@@ -45,12 +45,15 @@ jobs:
             echo "#\!/bin/sh \n./app &" > app.sh
             sh ./app.sh
             ls -al
-      - run:
-          name: test golang
-          command: |
             export WX_SERVER_ADDRESS=127.0.0.1:51001
             sleep 30
             go test -v ./...
+      # - run:
+      #     name: test golang
+      #     command: |
+      #       export WX_SERVER_ADDRESS=127.0.0.1:51001
+      #       sleep 30
+      #       go test -v ./...
 
       - setup_remote_docker:
           docker_layer_caching: false
