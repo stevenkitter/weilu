@@ -12,16 +12,17 @@ type Manager struct {
 
 //NewManager init manager and use middleware
 func NewManager() Manager {
-	engin := gin.Default()
-	engin.Use(CORSMiddleware())
+	engine := gin.Default()
+	engine.Use(CORSMiddleware())
 	m := Manager{
-		Engine: engin,
+		Engine: engine,
 	}
 	return m
 }
 
 //Route router the api
 func (m *Manager) Route() {
+	m.Engine.POST("/wx", WrapWXHandler(endpoint.WXReceiveEndpoint))
 	m.Engine.POST("/wx/:appid", WrapWXHandler(endpoint.WXReceiveEndpoint))
 	v1 := m.Engine.Group("/v1")
 	{
