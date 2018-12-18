@@ -94,7 +94,7 @@ jobs:
             ssh $SSH_USER@$SSH_HOST "export WX_MYSQL_PASSWORD=${WX_MYSQL_PASSWORD} && cd $JULU_PATH && sh deploy.sh"
       - run:
           name: Deploy api ssh
-          comand: |
+          command: |
             ls
             scp ./api/docker-compose.yml $SSH_USER@$SSH_HOST:$WEILU_API_PATH
             scp ./api/deploy.sh $SSH_USER@$SSH_HOST:$WEILU_API_PATH
