@@ -42,11 +42,6 @@ func WXReceiveEndpoint(c *gin.Context) (interface{}, error) {
 	if err != nil {
 		return "success", err
 	}
-
-	appID := c.Param("appid")
-	if appID != "" {
-		return "success", err
-	}
 	cl := client.Client{}
 	res, err := cl.DecryptMsg(&pb.WXEncryptedMessage{
 		Msg:          postData.Encrypt,
