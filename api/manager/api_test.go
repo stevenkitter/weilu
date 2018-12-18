@@ -2,7 +2,7 @@ package manager_test
 
 import (
 	"bytes"
-	"encoding/json"
+	"encoding/xml"
 	pb "github.com/stevenkitter/weilu/proto"
 	"io/ioutil"
 	"log"
@@ -20,12 +20,12 @@ func TestWXEndpoint(t *testing.T) {
 		Timestamp:    "",
 		Nonce:        "",
 	}
-	bts, err := json.Marshal(postData)
+	bts, err := xml.Marshal(postData)
 	if err != nil {
-		t.Errorf("json.Marshal err : %v", err)
+		t.Errorf("xml.Marshal err : %v", err)
 	}
 
-	resp, err := http.Post(url, "application/json", bytes.NewBuffer(bts))
+	resp, err := http.Post(url, "application/xml", bytes.NewBuffer(bts))
 	if err != nil {
 		t.Errorf("Post url err : %v", err)
 	}
