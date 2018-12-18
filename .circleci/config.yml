@@ -1,5 +1,5 @@
 # Golang CircleCI 2.0 configuration file
-#
+# Author wang xu
 # Check https://circleci.com/docs/2.0/language-go/ for more details
 version: 2
 jobs:
@@ -60,7 +60,7 @@ jobs:
 
       #  test all
       - run:
-          name: test micro services
+          name: test
           command: |
             sleep 10
             go test -v ./...

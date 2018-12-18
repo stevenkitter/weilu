@@ -2,7 +2,8 @@ syntax = "proto3";
 package proto;
 option go_package = "github.com/stevenkitter/weilu/proto";
 
-// WXMessage incoimg body message
+// WXMessage incoming body message
+// 用于解密微信的消息
 message WXEncryptedMessage {
   string msg = 1;
   string msgSignature = 2;
@@ -10,19 +11,27 @@ message WXEncryptedMessage {
   string nonce = 4;
 }
 // WXTicketReq save the decrypted message
+// 用于保存ticket
 message WXTicketReq {
   string appID = 1;
   string infoType = 2;
-  string componet = 3;
+  string component = 3;
 }
-
+// Base response struct
+// 基本的返回值
 message Resp {
   int32 code = 1;
   string msg = 2;
   string data = 3;
 }
 
+//GetTicketReq get the saved appid's ticket
+message GetTicketReq {
+  string appID = 1;
+}
+
 service WXService {
   rpc DecryptMsg(WXEncryptedMessage) returns (Resp);
   rpc TicketReceived(WXTicketReq) returns (Resp);
+  rpc Ticket(GetTicketReq) returns (Resp);
 }

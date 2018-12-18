@@ -57,14 +57,14 @@ func (s *Server) DecryptMsg(ctx context.Context, req *pb.WXEncryptedMessage) (*p
 	return resp, nil
 }
 
-//TicketReceived tencent ticket hander
+//TicketReceived tencent ticket handler
 func (s *Server) TicketReceived(ctx context.Context, req *pb.WXTicketReq) (*pb.Resp, error) {
 	component := database.WXComponent{}
 	err := s.DB.Where(database.WXComponent{
 		AppID:    req.AppID,
 		InfoType: req.InfoType,
 	}).Assign(database.WXComponent{
-		Component: req.Componet,
+		Component: req.Component,
 	}).FirstOrCreate(&component).Error
 	if err != nil {
 		log.Printf("TicketReceived Save sql err : %v", err)
@@ -74,4 +74,21 @@ func (s *Server) TicketReceived(ctx context.Context, req *pb.WXTicketReq) (*pb.R
 		Code: 200,
 	}
 	return resp, nil
+}
+
+//Ticket get the saved Ticket in mysql
+func (s *Server) Ticket(ctx context.Context, req *pb.GetTicketReq) (*pb.Resp, error) {
+	tick := database.WXComponent{}
+	err := s.DB.Where(
+		"app_id = ? and info_type = component_verify_ticket",
+		req.AppID).
+		Find(&tick).Error
+	if err != nil && !gorm.IsRecordNotFoundError(err) {
+		log.Printf("find ticket from mysql err : %v", err)
+		return nil, err
+	}
+	return &pb.Resp{
+		Code: 200,
+		Data: tick.Component,
+	}, nil
 }

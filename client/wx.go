@@ -21,36 +21,50 @@ var (
 
 //DecryptMsg decrypt msg
 func (c *Client) DecryptMsg(req *pb.WXEncryptedMessage) (*pb.Resp, error) {
-
-	conn, err := grpc.Dial(WXAddress, grpc.WithInsecure())
+	conn, cl, err := dialGrpc()
 	defer func() {
-		err := conn.Close()
-		if err != nil {
+		if err := conn.Close(); err != nil {
 			log.Printf("conn.Close err : %v", err)
 		}
 	}()
-
 	if err != nil {
 		return nil, err
 	}
-
-	cl := pb.NewWXServiceClient(conn)
 	return cl.DecryptMsg(context.Background(), req)
 }
 
 //TicketReceived ticket received request
 func (c *Client) TicketReceived(req *pb.WXTicketReq) (*pb.Resp, error) {
-	conn, err := grpc.Dial(WXAddress, grpc.WithInsecure())
+	conn, cl, err := dialGrpc()
 	defer func() {
-		err := conn.Close()
-		if err != nil {
+		if err := conn.Close(); err != nil {
 			log.Printf("conn.Close err : %v", err)
 		}
 	}()
 	if err != nil {
 		return nil, err
 	}
-
-	cl := pb.NewWXServiceClient(conn)
 	return cl.TicketReceived(context.Background(), req)
+}
+
+func (c *Client) Ticket(req *pb.GetTicketReq) (*pb.Resp, error) {
+	conn, cl, err := dialGrpc()
+	defer func() {
+		if err := conn.Close(); err != nil {
+			log.Printf("conn.Close err : %v", err)
+		}
+	}()
+	if err != nil {
+		return nil, err
+	}
+	return cl.Ticket(context.Background(), req)
+}
+
+func dialGrpc() (*grpc.ClientConn, pb.WXServiceClient, error) {
+	conn, err := grpc.Dial(WXAddress, grpc.WithInsecure())
+	if err != nil {
+		return nil, nil, err
+	}
+	cl := pb.NewWXServiceClient(conn)
+	return conn, cl, nil
 }
