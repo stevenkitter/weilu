@@ -8,7 +8,7 @@ import (
 	pb "github.com/stevenkitter/weilu/proto"
 
 	"github.com/gin-gonic/gin"
-	"github.com/stevenkitter/weilu/api/client"
+	"github.com/stevenkitter/weilu/client"
 	"github.com/stevenkitter/weilu/wxcrypter"
 )
 
@@ -47,15 +47,14 @@ func WXReceiveEndpoint(c *gin.Context) (interface{}, error) {
 	if appID != "" {
 		return "success", err
 	}
-	client := client.Client{}
-	res, err := client.DecryptMsg(&pb.WXEncryptedMessage{
+	cl := client.Client{}
+	res, err := cl.DecryptMsg(&pb.WXEncryptedMessage{
 		Msg:          postData.Encrypt,
 		MsgSignature: query.MsgSignature,
 		Timestamp:    query.Timestamp,
 		Nonce:        query.Nonce,
 	})
 	if err != nil {
-
 		return "success", err
 	}
 	log.Printf("client.DecryptMsg %v\n", res)
@@ -69,7 +68,7 @@ func WXReceiveEndpoint(c *gin.Context) (interface{}, error) {
 		InfoType: wxMsg.InfoType,
 		Componet: wxMsg.ComponentVerifyTicket,
 	}
-	_, err = client.TicketReceived(&ticketReq)
+	_, err = cl.TicketReceived(&ticketReq)
 	if err != nil {
 		return "success", err
 	}

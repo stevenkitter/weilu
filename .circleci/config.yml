@@ -3,6 +3,7 @@
 # Check https://circleci.com/docs/2.0/language-go/ for more details
 version: 2
 jobs:
+  # build base services 构建底层微服务
   build:
     docker:
       - image: circleci/golang:1.11
@@ -14,12 +15,14 @@ jobs:
     working_directory: /go/src/github.com/stevenkitter/weilu
     parallelism: 1
     environment:
-      # WX_SERVER_ADDRESS: "::1:51001"
+      WX_API_SERVER_ADDRESS: 127.0.0.1:8100
+      WX_SERVER_ADDRESS: 127.0.0.1:51001
       WX_MYSQL_PASSWORD: rWk1hvqMT62K2JYH
       MYSQL_URL: "localhost:3306"
       WX_MYSQL_USER: "wx"
       WX_DATABASE: "wx"
     steps:
+      # 构建微服务
       - checkout
       - run: go get -v -t -d ./...
       - run: sudo apt-get update && sudo apt install -y mysql-client
@@ -27,7 +30,6 @@ jobs:
           name: Waiting for Mysql to be ready
           command: |
             sh ./wait.sh
-
       - run:
           name: init mysql
           command: |
@@ -37,20 +39,33 @@ jobs:
           command: |
             cd services/wx
             CGO_ENABLED=0 GOOS=linux go build -o app .
-
       - run:
           name: run the micro services
           command: |
             cd services/wx
             ./app
           background: true
+
+      # 下面就是构建api的测试
       - run:
-          name: test golang
+          name: build api to image
+          command: |
+            cd api
+            CGO_ENABLED=0 GOOS=linux go build -o app .
+      - run:
+          name: run api server
+          command: |
+            cd api
+            ./app
+          background: true
+
+      #  test all
+      - run:
+          name: test micro services
           command: |
             sleep 10
-            export WX_SERVER_ADDRESS=127.0.0.1:51001
             go test -v ./...
-
+      # push to tencent image
       - setup_remote_docker:
           docker_layer_caching: false
       - run:
@@ -60,12 +75,14 @@ jobs:
             docker build -t ccr.ccs.tencentyun.com/julu/weilu_wx .
             docker login -u 100000776220 -p wangxu226 ccr.ccs.tencentyun.com
             docker push ccr.ccs.tencentyun.com/julu/weilu_wx
+
   deploy:
     machine:
       enable: true
     working_directory: ~/julu
     environment:
       JULU_PATH: "/home/ubuntu/production/julu"
+      WEILU_API_PATH: "/home/ubuntu/production/weilu/api"
     steps:
       - checkout
       - run:
@@ -75,6 +92,12 @@ jobs:
             scp docker-compose.yml $SSH_USER@$SSH_HOST:$JULU_PATH
             scp deploy.sh $SSH_USER@$SSH_HOST:$JULU_PATH
             ssh $SSH_USER@$SSH_HOST "export WX_MYSQL_PASSWORD=${WX_MYSQL_PASSWORD} && cd $JULU_PATH && sh deploy.sh"
+      - run:
+          name: Deploy api ssh
+            ls
+            scp ./api/docker-compose.yml $SSH_USER@$SSH_HOST:$WEILU_API_PATH
+            scp ./api/deploy.sh $SSH_USER@$SSH_HOST:$WEILU_API_PATH
+            ssh $SSH_USER@$SSH_HOST "cd $WEILU_API_PATH && sh deploy.sh"
 workflows:
   version: 2
   build_deploy:
