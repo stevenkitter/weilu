@@ -15,7 +15,7 @@ jobs:
     working_directory: /go/src/github.com/stevenkitter/weilu
     parallelism: 1
     environment:
-      WX_API_SERVER_ADDRESS: 127.0.0.1:8100
+      WX_API_SERVER_ADDRESS: "http://127.0.0.1:8100"
       WX_SERVER_ADDRESS: 127.0.0.1:51001
       MYSQL_URL: "localhost:3306"
       WX_MYSQL_USER: "wx"
