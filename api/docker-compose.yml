@@ -1,0 +1,19 @@
+version: "2"
+
+services:
+  # julu weilu wx server
+  julu_weilu_api:
+    image: ccr.ccs.tencentyun.com/julu/weilu_api
+    expose:
+      - 8100
+    environment:
+      WX_SERVER_ADDRESS: "julu_weilu_wx:51001"
+    networks:
+      - internal
+    restart: on-failure
+    labels:
+      - "traefik.frontend.rule=Host:api.julu666.com"
+      - "traefik.port=8100"
+networks:
+  internal:
+    external: true
