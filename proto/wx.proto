@@ -30,6 +30,10 @@ message GetTicketReq {
   string appID = 1;
 }
 
+message GetAccessTokenReq {
+
+}
+
 service WXService {
   rpc DecryptMsg(WXEncryptedMessage) returns (Resp);
   rpc TicketReceived(WXTicketReq) returns (Resp);

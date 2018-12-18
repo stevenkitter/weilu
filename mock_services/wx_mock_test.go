@@ -38,9 +38,9 @@ var decryptMsgReq = &pb.WXEncryptedMessage{
 }
 
 var ticketReceivedReq = &pb.WXTicketReq{
-	AppID:    "",
-	InfoType: "",
-	Componet: "",
+	AppID:     "",
+	InfoType:  "",
+	Component: "",
 }
 
 func TestDecryptMsg(t *testing.T) {

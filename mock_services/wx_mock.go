@@ -75,6 +75,26 @@ func (mr *MockWXServiceClientMockRecorder) TicketReceived(ctx, in interface{}, o
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TicketReceived", reflect.TypeOf((*MockWXServiceClient)(nil).TicketReceived), varargs...)
 }
 
+// Ticket mocks base method
+func (m *MockWXServiceClient) Ticket(ctx context.Context, in *proto.GetTicketReq, opts ...grpc.CallOption) (*proto.Resp, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "Ticket", varargs...)
+	ret0, _ := ret[0].(*proto.Resp)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Ticket indicates an expected call of Ticket
+func (mr *MockWXServiceClientMockRecorder) Ticket(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Ticket", reflect.TypeOf((*MockWXServiceClient)(nil).Ticket), varargs...)
+}
+
 // MockWXServiceServer is a mock of WXServiceServer interface
 type MockWXServiceServer struct {
 	ctrl     *gomock.Controller
@@ -126,4 +146,19 @@ func (m *MockWXServiceServer) TicketReceived(arg0 context.Context, arg1 *proto.W
 func (mr *MockWXServiceServerMockRecorder) TicketReceived(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TicketReceived", reflect.TypeOf((*MockWXServiceServer)(nil).TicketReceived), arg0, arg1)
+}
+
+// Ticket mocks base method
+func (m *MockWXServiceServer) Ticket(arg0 context.Context, arg1 *proto.GetTicketReq) (*proto.Resp, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Ticket", arg0, arg1)
+	ret0, _ := ret[0].(*proto.Resp)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Ticket indicates an expected call of Ticket
+func (mr *MockWXServiceServerMockRecorder) Ticket(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Ticket", reflect.TypeOf((*MockWXServiceServer)(nil).Ticket), arg0, arg1)
 }
