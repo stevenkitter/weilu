@@ -13,7 +13,7 @@ import (
 
 func TestWXEndpoint(t *testing.T) {
 	var url = os.Getenv("WX_API_SERVER_ADDRESS")
-	url = url + "/wx" +
+	url = "http://" + url + "/wx" +
 		"?signature=3bb7c0a3ec15d3ffe2158e3995a3446e9ce91fa5&timestamp=1545102154&nonce=1212295081&encrypt_type=aes&msg_signature=6d20f174608bc74861a52893469d7280232f7e49"
 	postData := &pb.WXEncryptedMessage{
 		Msg:          "",
