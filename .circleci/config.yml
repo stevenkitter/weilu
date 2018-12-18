@@ -17,7 +17,6 @@ jobs:
     environment:
       WX_API_SERVER_ADDRESS: 127.0.0.1:8100
       WX_SERVER_ADDRESS: 127.0.0.1:51001
-      WX_MYSQL_PASSWORD: rWk1hvqMT62K2JYH
       MYSQL_URL: "localhost:3306"
       WX_MYSQL_USER: "wx"
       WX_DATABASE: "wx"
@@ -73,14 +72,14 @@ jobs:
           command: |
             cd services/wx
             docker build -t ccr.ccs.tencentyun.com/julu/weilu_wx .
-            docker login -u 100000776220 -p wangxu226 ccr.ccs.tencentyun.com
+            docker login -u $DOCKER_TENCENT_USER -p $DOCKER_TENCENT_PASSWORD ccr.ccs.tencentyun.com
             docker push ccr.ccs.tencentyun.com/julu/weilu_wx
       - run:
           name: push weilu api to tencent image
           command: |
             cd api
             docker build -t ccr.ccs.tencentyun.com/julu/weilu_api .
-            docker login -u 100000776220 -p wangxu226 ccr.ccs.tencentyun.com
+            docker login -u $DOCKER_TENCENT_USER -p $DOCKER_TENCENT_PASSWORD ccr.ccs.tencentyun.com
             docker push ccr.ccs.tencentyun.com/julu/weilu_api
 
   deploy:
@@ -105,7 +104,7 @@ jobs:
             ls
             scp ./api/docker-compose.yml $SSH_USER@$SSH_HOST:$WEILU_API_PATH
             scp ./api/deploy.sh $SSH_USER@$SSH_HOST:$WEILU_API_PATH
-            ssh $SSH_USER@$SSH_HOST "cd $WEILU_API_PATH && sh deploy.sh"
+            ssh $SSH_USER@$SSH_HOST "export DOCKER_TENCENT_USER=${DOCKER_TENCENT_USER} && export DOCKER_TENCENT_PASSWORD=${DOCKER_TENCENT_PASSWORD} && cd $WEILU_API_PATH && sh deploy.sh"
 workflows:
   version: 2
   build_deploy:
