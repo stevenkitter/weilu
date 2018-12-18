@@ -80,8 +80,8 @@ func (s *Server) TicketReceived(ctx context.Context, req *pb.WXTicketReq) (*pb.R
 func (s *Server) Ticket(ctx context.Context, req *pb.GetTicketReq) (*pb.Resp, error) {
 	tick := database.WXComponent{}
 	err := s.DB.Where(
-		"app_id = ? and info_type = component_verify_ticket",
-		req.AppID).
+		"app_id = ? AND info_type = ?",
+		req.AppID, "component_verify_ticket").
 		Find(&tick).Error
 	if err != nil && !gorm.IsRecordNotFoundError(err) {
 		log.Printf("find ticket from mysql err : %v", err)
