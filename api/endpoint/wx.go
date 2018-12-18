@@ -59,9 +59,9 @@ func WXReceiveEndpoint(c *gin.Context) (interface{}, error) {
 		return "success", err
 	}
 	ticketReq := pb.WXTicketReq{
-		AppID:    wxcrypter.AppID,
-		InfoType: wxMsg.InfoType,
-		Componet: wxMsg.ComponentVerifyTicket,
+		AppID:     wxcrypter.AppID,
+		InfoType:  wxMsg.InfoType,
+		Component: wxMsg.ComponentVerifyTicket,
 	}
 	_, err = cl.TicketReceived(&ticketReq)
 	if err != nil {
