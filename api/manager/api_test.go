@@ -3,7 +3,7 @@ package manager_test
 import (
 	"bytes"
 	"encoding/xml"
-	pb "github.com/stevenkitter/weilu/proto"
+	"github.com/stevenkitter/weilu/wxcrypter"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -14,12 +14,9 @@ import (
 func TestWXEndpoint(t *testing.T) {
 	var url = os.Getenv("WX_API_SERVER_ADDRESS")
 	url = url + "/wx" +
-		"?signature=3bb7c0a3ec15d3ffe2158e3995a3446e9ce91fa5&timestamp=1545102154&nonce=1212295081&encrypt_type=aes&msg_signature=6d20f174608bc74861a52893469d7280232f7e49"
-	postData := &pb.WXEncryptedMessage{
-		Msg:          "",
-		MsgSignature: "",
-		Timestamp:    "",
-		Nonce:        "",
+		"?signature=23b6cf3b709fd0cc0f211fe94881a1610e8f59b4&timestamp=1545107020&nonce=1818822260&encrypt_type=aes&msg_signature=231168c3d0ae6ef5ce7eb391971ff18ed3e2f847"
+	postData := &wxcrypter.EncryptedRequestXML{
+		Encrypt: "j2x5ykY7tarUa5wMRkFHhgAwJTZMB6ZkuXpo4qNHCO7wYbqLaRg6U26gvv2NWbGqq4w8cQlP6xE+OoMv5MAr79oSeq1L/FOOG+qHZZD2ZN46Lib6orkY3n14+/g/4SSa7C2Sh/giA7KS/C0WzazNChF1c9n7OdRfhhNccvLUK0ZOKfXluyTCSM2gf9eR4TYP9mqs0ogyBHi+oug/yRGE+h+WNT3UyipA4mibZkj8uyLNsxvy/K/zKwmWoFPk9OYQg1LSu7PQLbPEYN1gcOmXn/Q3QddlbqLhg5/fr3Qh3+TPn2WqHuMBZ+3gku/cINGvn5fRLzfg8QmkqzR9ocuYfrQIW01Q21wnjubZ39P4QHIw7kJy9oWasDy83V87tnHqkFvUhm52Bfm7LauwoRLM4wQSlxxoZYwKDrJbmiHT6x/fh6lxNysZlTZaAUvUpboeSsVcApbxGUNsGx6u8ToDqQ==",
 	}
 	bts, err := xml.Marshal(postData)
 	if err != nil {
