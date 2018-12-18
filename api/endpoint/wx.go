@@ -3,9 +3,8 @@ package endpoint
 import (
 	"encoding/xml"
 	"errors"
-	"log"
-
 	pb "github.com/stevenkitter/weilu/proto"
+	"log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stevenkitter/weilu/client"
@@ -42,6 +41,7 @@ func WXReceiveEndpoint(c *gin.Context) (interface{}, error) {
 	if err != nil {
 		return "success", err
 	}
+	log.Printf("postData %v\n", postData)
 	cl := client.Client{}
 	res, err := cl.DecryptMsg(&pb.WXEncryptedMessage{
 		Msg:          postData.Encrypt,
@@ -52,7 +52,7 @@ func WXReceiveEndpoint(c *gin.Context) (interface{}, error) {
 	if err != nil {
 		return "success", err
 	}
-	log.Printf("client.DecryptMsg %v\n", res)
+
 	wxMsg := wxcrypter.ReceivedMessage{}
 	err = xml.Unmarshal([]byte(res.Data), &wxMsg)
 	if err != nil {
