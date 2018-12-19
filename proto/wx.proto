@@ -38,6 +38,8 @@ message GetPreAuthCodeReq {
   string appID = 1;
 }
 
+
+
 service WXService {
   rpc DecryptMsg(WXEncryptedMessage) returns (Resp);
   rpc TicketReceived(WXTicketReq) returns (Resp);

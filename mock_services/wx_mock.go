@@ -115,6 +115,26 @@ func (mr *MockWXServiceClientMockRecorder) AccessToken(ctx, in interface{}, opts
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AccessToken", reflect.TypeOf((*MockWXServiceClient)(nil).AccessToken), varargs...)
 }
 
+// PreAuthCode mocks base method
+func (m *MockWXServiceClient) PreAuthCode(ctx context.Context, in *proto.GetPreAuthCodeReq, opts ...grpc.CallOption) (*proto.Resp, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "PreAuthCode", varargs...)
+	ret0, _ := ret[0].(*proto.Resp)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// PreAuthCode indicates an expected call of PreAuthCode
+func (mr *MockWXServiceClientMockRecorder) PreAuthCode(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PreAuthCode", reflect.TypeOf((*MockWXServiceClient)(nil).PreAuthCode), varargs...)
+}
+
 // MockWXServiceServer is a mock of WXServiceServer interface
 type MockWXServiceServer struct {
 	ctrl     *gomock.Controller
@@ -196,4 +216,19 @@ func (m *MockWXServiceServer) AccessToken(arg0 context.Context, arg1 *proto.GetA
 func (mr *MockWXServiceServerMockRecorder) AccessToken(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AccessToken", reflect.TypeOf((*MockWXServiceServer)(nil).AccessToken), arg0, arg1)
+}
+
+// PreAuthCode mocks base method
+func (m *MockWXServiceServer) PreAuthCode(arg0 context.Context, arg1 *proto.GetPreAuthCodeReq) (*proto.Resp, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PreAuthCode", arg0, arg1)
+	ret0, _ := ret[0].(*proto.Resp)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// PreAuthCode indicates an expected call of PreAuthCode
+func (mr *MockWXServiceServerMockRecorder) PreAuthCode(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PreAuthCode", reflect.TypeOf((*MockWXServiceServer)(nil).PreAuthCode), arg0, arg1)
 }

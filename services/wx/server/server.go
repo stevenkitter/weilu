@@ -135,3 +135,7 @@ func (s *Server) AccessToken(ctx context.Context, req *pb.GetAccessTokenReq) (*p
 		Data: comp.Component,
 	}, nil
 }
+
+func (s *Server) PreAuthCode(context.Context, *pb.GetPreAuthCodeReq) (*pb.Resp, error) {
+	panic("implement me")
+}
