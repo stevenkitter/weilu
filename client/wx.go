@@ -2,26 +2,18 @@ package client
 
 import (
 	"context"
-	"log"
-	"os"
-
 	pb "github.com/stevenkitter/weilu/proto"
-
-	"google.golang.org/grpc"
+	"log"
 )
 
 //Client used for request server
 type Client struct {
+	Address string //哪个微服务的客户端
 }
-
-var (
-	//WXAddress wx server address
-	WXAddress = os.Getenv("WX_SERVER_ADDRESS")
-)
 
 //DecryptMsg decrypt msg
 func (c *Client) DecryptMsg(req *pb.WXEncryptedMessage) (*pb.Resp, error) {
-	conn, cl, err := dialGrpc()
+	conn, cl, err := dialGrpc(c.Address)
 	defer func() {
 		if err := conn.Close(); err != nil {
 			log.Printf("conn.Close err : %v", err)
@@ -35,7 +27,7 @@ func (c *Client) DecryptMsg(req *pb.WXEncryptedMessage) (*pb.Resp, error) {
 
 //TicketReceived ticket received request
 func (c *Client) TicketReceived(req *pb.WXTicketReq) (*pb.Resp, error) {
-	conn, cl, err := dialGrpc()
+	conn, cl, err := dialGrpc(c.Address)
 	defer func() {
 		if err := conn.Close(); err != nil {
 			log.Printf("conn.Close err : %v", err)
@@ -48,7 +40,7 @@ func (c *Client) TicketReceived(req *pb.WXTicketReq) (*pb.Resp, error) {
 }
 
 func (c *Client) Ticket(req *pb.GetTicketReq) (*pb.Resp, error) {
-	conn, cl, err := dialGrpc()
+	conn, cl, err := dialGrpc(c.Address)
 	defer func() {
 		if err := conn.Close(); err != nil {
 			log.Printf("conn.Close err : %v", err)
@@ -60,11 +52,16 @@ func (c *Client) Ticket(req *pb.GetTicketReq) (*pb.Resp, error) {
 	return cl.Ticket(context.Background(), req)
 }
 
-func dialGrpc() (*grpc.ClientConn, pb.WXServiceClient, error) {
-	conn, err := grpc.Dial(WXAddress, grpc.WithInsecure())
+func (c *Client) AccessToken(req *pb.GetAccessTokenReq) (*pb.Resp, error) {
+	conn, cl, err := dialGrpc(c.Address)
+	defer func() {
+		if err := conn.Close(); err != nil {
+			log.Printf("conn.Close err : %v", err)
+		}
+	}()
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
-	cl := pb.NewWXServiceClient(conn)
-	return conn, cl, nil
+	log.Printf("connected ok %v", cl)
+	return cl.AccessToken(context.Background(), req)
 }

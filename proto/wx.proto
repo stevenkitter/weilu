@@ -29,13 +29,14 @@ message Resp {
 message GetTicketReq {
   string appID = 1;
 }
-
+//GetAccessTokenReq get access token 第三平台的token
 message GetAccessTokenReq {
-
+  string appID = 1;
 }
 
 service WXService {
   rpc DecryptMsg(WXEncryptedMessage) returns (Resp);
   rpc TicketReceived(WXTicketReq) returns (Resp);
   rpc Ticket(GetTicketReq) returns (Resp);
+  rpc AccessToken(GetAccessTokenReq) returns (Resp);
 }

@@ -5,6 +5,7 @@ import (
 	"errors"
 	pb "github.com/stevenkitter/weilu/proto"
 	"log"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stevenkitter/weilu/client"
@@ -42,7 +43,9 @@ func WXReceiveEndpoint(c *gin.Context) (interface{}, error) {
 		return "success", err
 	}
 	log.Printf("postData %v\n", postData)
-	cl := client.Client{}
+	cl := client.Client{
+		Address: os.Getenv("WX_SERVER_ADDRESS"),
+	}
 	res, err := cl.DecryptMsg(&pb.WXEncryptedMessage{
 		Msg:          postData.Encrypt,
 		MsgSignature: query.MsgSignature,

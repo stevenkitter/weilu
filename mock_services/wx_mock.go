@@ -95,6 +95,26 @@ func (mr *MockWXServiceClientMockRecorder) Ticket(ctx, in interface{}, opts ...i
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Ticket", reflect.TypeOf((*MockWXServiceClient)(nil).Ticket), varargs...)
 }
 
+// AccessToken mocks base method
+func (m *MockWXServiceClient) AccessToken(ctx context.Context, in *proto.GetAccessTokenReq, opts ...grpc.CallOption) (*proto.Resp, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "AccessToken", varargs...)
+	ret0, _ := ret[0].(*proto.Resp)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AccessToken indicates an expected call of AccessToken
+func (mr *MockWXServiceClientMockRecorder) AccessToken(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AccessToken", reflect.TypeOf((*MockWXServiceClient)(nil).AccessToken), varargs...)
+}
+
 // MockWXServiceServer is a mock of WXServiceServer interface
 type MockWXServiceServer struct {
 	ctrl     *gomock.Controller
@@ -161,4 +181,19 @@ func (m *MockWXServiceServer) Ticket(arg0 context.Context, arg1 *proto.GetTicket
 func (mr *MockWXServiceServerMockRecorder) Ticket(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Ticket", reflect.TypeOf((*MockWXServiceServer)(nil).Ticket), arg0, arg1)
+}
+
+// AccessToken mocks base method
+func (m *MockWXServiceServer) AccessToken(arg0 context.Context, arg1 *proto.GetAccessTokenReq) (*proto.Resp, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AccessToken", arg0, arg1)
+	ret0, _ := ret[0].(*proto.Resp)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AccessToken indicates an expected call of AccessToken
+func (mr *MockWXServiceServerMockRecorder) AccessToken(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AccessToken", reflect.TypeOf((*MockWXServiceServer)(nil).AccessToken), arg0, arg1)
 }

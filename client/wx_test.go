@@ -3,6 +3,7 @@ package client_test
 import (
 	"github.com/stevenkitter/weilu/client"
 	pb "github.com/stevenkitter/weilu/proto"
+	"os"
 	"testing"
 )
 
@@ -16,7 +17,9 @@ func TestClient_DecryptMsg(t *testing.T) {
 	}
 	const expected = "<xml>\n\t\t\t<AppId><![CDATA[wxdd9779d0ca45ea77]]></AppId>\n\t\t\t<CreateTime>1541214207</CreateTime>\n\t\t\t<InfoType><![CDATA[component_verify_ticket]]></InfoType>\n\t\t\t<ComponentVerifyTicket><![CDATA[ticket@@@GTzK1SPD-Ox_UJbmednfythV0KcGryo0XrMiQ2ob9-jShVOb2DwbrktcEfd6bIy0chk1xW_XIODBzTIJ9gvloA]]></ComponentVerifyTicket>\n\t\t</xml>"
 
-	cl := client.Client{}
+	cl := client.Client{
+		Address: os.Getenv("WX_SERVER_ADDRESS"),
+	}
 	res, err := cl.DecryptMsg(decryptMsgReq)
 	if err != nil {
 		t.Errorf("cl.DecryptMsg failed Err: %v", err)
@@ -32,7 +35,9 @@ func TestClient_TicketReceived(t *testing.T) {
 		InfoType:  "component_verify_ticket",
 		Component: "ticket@@@_brEdT5HGzMu8rTvU46jQmFvj8kBi1bwVWKRUETRAOuvVrkw-qJX52S0Grh6X3YMjDKJKkQiNHzCd26UUvDeWg",
 	}
-	cl := client.Client{}
+	cl := client.Client{
+		Address: os.Getenv("WX_SERVER_ADDRESS"),
+	}
 	res, err := cl.TicketReceived(req)
 	if err != nil {
 		t.Errorf("cl.TicketReceived err : %v", err)
@@ -46,7 +51,9 @@ func TestClient_Ticket(t *testing.T) {
 	req := &pb.GetTicketReq{
 		AppID: "wxdd9779d0ca45ea77",
 	}
-	cl := client.Client{}
+	cl := client.Client{
+		Address: os.Getenv("WX_SERVER_ADDRESS"),
+	}
 	res, err := cl.Ticket(req)
 	if err != nil {
 		t.Errorf("cl.Ticket err : %v", err)
@@ -56,5 +63,21 @@ func TestClient_Ticket(t *testing.T) {
 	}
 	if res.Data == "" {
 		t.Logf("ticket record not finded i will import sql later")
+	}
+}
+
+func TestClient_AccessToken(t *testing.T) {
+	req := &pb.GetAccessTokenReq{
+		AppID: "wxdd9779d0ca45ea77",
+	}
+	cl := client.Client{
+		Address: os.Getenv("WX_SERVER_ADDRESS"),
+	}
+	res, err := cl.AccessToken(req)
+	if err != nil {
+		t.Errorf("cl.AccessToken err : %v", err)
+	}
+	if res.Code != 200 {
+		t.Errorf("AccessToken client failed")
 	}
 }

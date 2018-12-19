@@ -2,8 +2,10 @@ package server
 
 import (
 	"context"
+	"github.com/stevenkitter/weilu/services/wx/httpClient"
 	"log"
 	"net"
+	"time"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -66,6 +68,7 @@ func (s *Server) TicketReceived(ctx context.Context, req *pb.WXTicketReq) (*pb.R
 	}).Assign(database.WXComponent{
 		Component: req.Component,
 	}).FirstOrCreate(&component).Error
+	log.Printf("ticket received is %s", req.Component)
 	if err != nil {
 		log.Printf("TicketReceived Save sql err : %v", err)
 		return nil, err
@@ -81,7 +84,7 @@ func (s *Server) Ticket(ctx context.Context, req *pb.GetTicketReq) (*pb.Resp, er
 	tick := database.WXComponent{}
 	err := s.DB.Where(
 		"app_id = ? AND info_type = ?",
-		req.AppID, "component_verify_ticket").
+		req.AppID, database.ComponentVerifyTicket).
 		Find(&tick).Error
 	if err != nil && !gorm.IsRecordNotFoundError(err) {
 		log.Printf("find ticket from mysql err : %v", err)
@@ -90,5 +93,45 @@ func (s *Server) Ticket(ctx context.Context, req *pb.GetTicketReq) (*pb.Resp, er
 	return &pb.Resp{
 		Code: 200,
 		Data: tick.Component,
+	}, nil
+}
+
+func (s *Server) AccessToken(ctx context.Context, req *pb.GetAccessTokenReq) (*pb.Resp, error) {
+	comp := database.WXComponent{}
+	err := s.DB.Where(
+		"app_id = ? AND info_type = ?",
+		req.AppID, database.ComponentAccessToken).Find(&comp).Error
+	if err != nil && !gorm.IsRecordNotFoundError(err) {
+		log.Printf("s.DB.Where err : %v", err)
+		return nil, err
+	}
+	if gorm.IsRecordNotFoundError(err) || time.Now().Unix() >= int64(comp.Expired) {
+		//update or create
+		hcl := httpClient.Client{}
+		ticket, err := s.Ticket(ctx, &pb.GetTicketReq{
+			AppID: wxcrypter.AppID,
+		})
+		if err != nil {
+			log.Printf("s.Ticket err : %v", err)
+			return nil, err
+		}
+		token, expires, err := hcl.RequestAccessToken(ticket.Data)
+		if err != nil {
+			log.Printf("hcl.AccessToken err : %v ticket is %s", err, ticket.Data)
+			return nil, err
+		}
+		go func() {
+			if err := s.SaveTokenExpires(token, expires); err != nil {
+				log.Printf("SaveTokenExpires err : %v", err)
+			}
+		}()
+		return &pb.Resp{
+			Code: 200,
+			Data: token,
+		}, nil
+	}
+	return &pb.Resp{
+		Code: 200,
+		Data: comp.Component,
 	}, nil
 }

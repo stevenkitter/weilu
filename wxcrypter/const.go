@@ -12,6 +12,6 @@ const (
 )
 
 var (
-	//AppSecrect app secrect
-	AppSecrect = os.Getenv("WXAppSecrect")
+	//AppSecret app secret
+	AppSecret = os.Getenv("WXAppSecret")
 )
