@@ -61,14 +61,7 @@ func (s *Server) DecryptMsg(ctx context.Context, req *pb.WXEncryptedMessage) (*p
 
 //TicketReceived tencent ticket handler
 func (s *Server) TicketReceived(ctx context.Context, req *pb.WXTicketReq) (*pb.Resp, error) {
-	component := database.WXComponent{}
-	err := s.DB.Where(database.WXComponent{
-		AppID:    req.AppID,
-		InfoType: req.InfoType,
-	}).Assign(database.WXComponent{
-		Component: req.Component,
-	}).FirstOrCreate(&component).Error
-	log.Printf("ticket received is %s", req.Component)
+	err := s.SaveTicket(req.Component)
 	if err != nil {
 		log.Printf("TicketReceived Save sql err : %v", err)
 		return nil, err
@@ -136,6 +129,41 @@ func (s *Server) AccessToken(ctx context.Context, req *pb.GetAccessTokenReq) (*p
 	}, nil
 }
 
-func (s *Server) PreAuthCode(context.Context, *pb.GetPreAuthCodeReq) (*pb.Resp, error) {
-	panic("implement me")
+func (s *Server) PreAuthCode(ctx context.Context, req *pb.GetPreAuthCodeReq) (*pb.Resp, error) {
+	comp := database.WXComponent{}
+	err := s.DB.Where(
+		"app_id = ? AND info_type = ?",
+		req.AppID, database.PreAuthCode).Find(&comp).Error
+	if err != nil && !gorm.IsRecordNotFoundError(err) {
+		log.Printf("s.DB.Where err : %v", err)
+		return nil, err
+	}
+	if gorm.IsRecordNotFoundError(err) || time.Now().Unix() >= int64(comp.Expired) {
+		hcl := httpClient.Client{}
+		res, err := s.AccessToken(ctx, &pb.GetAccessTokenReq{
+			AppID: wxcrypter.AppID,
+		})
+		if err != nil {
+			log.Printf("s.AccessToken err : %v", err)
+			return nil, err
+		}
+		authCode, expires, err := hcl.RequestPreAuthCode(res.Data)
+		if err != nil {
+			log.Printf("hcl.RequestPreAuthCode err : %v", err)
+			return nil, err
+		}
+		go func() {
+			if err := s.SaveAuthCodeExpires(authCode, expires); err != nil {
+				log.Printf("SaveAuthCodeExpires err : %v", err)
+			}
+		}()
+		return &pb.Resp{
+			Code: 200,
+			Data: authCode,
+		}, nil
+	}
+	return &pb.Resp{
+		Code: 200,
+		Data: comp.Component,
+	}, nil
 }

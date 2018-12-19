@@ -62,6 +62,18 @@ func (c *Client) AccessToken(req *pb.GetAccessTokenReq) (*pb.Resp, error) {
 	if err != nil {
 		return nil, err
 	}
-	log.Printf("connected ok %v", cl)
 	return cl.AccessToken(context.Background(), req)
+}
+
+func (c *Client) PreAuthCode(req *pb.GetPreAuthCodeReq) (*pb.Resp, error) {
+	conn, cl, err := dialGrpc(c.Address)
+	defer func() {
+		if err := conn.Close(); err != nil {
+			log.Printf("conn.Close err : %v", err)
+		}
+	}()
+	if err != nil {
+		return nil, err
+	}
+	return cl.PreAuthCode(context.Background(), req)
 }

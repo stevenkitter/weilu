@@ -19,7 +19,7 @@ const (
 	//ComponentAccessToken token
 	ComponentAccessToken ComponentType = "component_access_token"
 	//PreAuthCode auth code
-	//PreAuthCode ComponentType = "pre_auth_code"
+	PreAuthCode ComponentType = "pre_auth_code"
 	////AuthorizerAccessToken auth access token
 	//AuthorizerAccessToken ComponentType = "authorizer_access_token"
 	////AuthorizerRefreshToken auth refresh token
