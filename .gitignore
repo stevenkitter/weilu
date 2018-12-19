@@ -12,3 +12,5 @@
 *.out
 .env
 .idea
+run_local_server.sh
+test.sh
