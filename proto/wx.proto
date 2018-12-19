@@ -34,9 +34,14 @@ message GetAccessTokenReq {
   string appID = 1;
 }
 
+message GetPreAuthCodeReq {
+  string appID = 1;
+}
+
 service WXService {
   rpc DecryptMsg(WXEncryptedMessage) returns (Resp);
   rpc TicketReceived(WXTicketReq) returns (Resp);
   rpc Ticket(GetTicketReq) returns (Resp);
   rpc AccessToken(GetAccessTokenReq) returns (Resp);
+  rpc PreAuthCode(GetPreAuthCodeReq) returns (Resp);
 }
