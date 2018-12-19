@@ -4,7 +4,6 @@ import (
 	"encoding/xml"
 	"errors"
 	pb "github.com/stevenkitter/weilu/proto"
-	"log"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -42,7 +41,6 @@ func WXReceiveEndpoint(c *gin.Context) (interface{}, error) {
 	if err != nil {
 		return "success", err
 	}
-	log.Printf("postData %v\n", postData)
 	cl := client.Client{
 		Address: os.Getenv("WX_SERVER_ADDRESS"),
 	}

@@ -29,7 +29,7 @@ const (
 //WXComponent save the component
 type WXComponent struct {
 	gorm.Model
-	AppID     string `gorm:"unique_index"`
+	AppID     string
 	InfoType  string //ComponentType
 	Component string //value
 	Expired   int    //timestamp

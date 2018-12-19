@@ -5,7 +5,6 @@ import (
 	"github.com/pkg/errors"
 	"github.com/stevenkitter/weilu/helper"
 	"github.com/stevenkitter/weilu/wxcrypter"
-	"log"
 )
 
 const (
@@ -24,7 +23,6 @@ func (cl *Client) RequestAccessToken(ticket string) (string, int, error) {
 		"component_appsecret":     wxcrypter.AppSecret,
 		"component_verify_ticket": ticket,
 	}
-	log.Printf("postData %v", postData)
 	data, err := helper.PostJson(TokenURL, postData)
 	if err != nil {
 		return "", 0, err
@@ -42,5 +40,5 @@ func (cl *Client) RequestAccessToken(ticket string) (string, int, error) {
 	if !ok {
 		return "", 0, errors.New(respDict["errmsg"].(string))
 	}
-	return acToken.(string), int(expiresIn.(int64)), nil
+	return acToken.(string), int(expiresIn.(float64)), nil
 }

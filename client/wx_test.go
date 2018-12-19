@@ -33,7 +33,7 @@ func TestClient_TicketReceived(t *testing.T) {
 	req := &pb.WXTicketReq{
 		AppID:     "wxdd9779d0ca45ea77",
 		InfoType:  "component_verify_ticket",
-		Component: "ticket@@@_brEdT5HGzMu8rTvU46jQmFvj8kBi1bwVWKRUETRAOuvVrkw-qJX52S0Grh6X3YMjDKJKkQiNHzCd26UUvDeWg",
+		Component: "ticket@@@OR-oiXvB5nbXy5VAf2DXqWyf3zABMWUI0BBd33f8Zgdrd_YdbuqqaU_tI3j_VbV063UCMqKc8TpTQeuKiI7Hig",
 	}
 	cl := client.Client{
 		Address: os.Getenv("WX_SERVER_ADDRESS"),
@@ -67,17 +67,17 @@ func TestClient_Ticket(t *testing.T) {
 }
 
 func TestClient_AccessToken(t *testing.T) {
-	//req := &pb.GetAccessTokenReq{
-	//	AppID: "wxdd9779d0ca45ea77",
-	//}
-	//cl := client.Client{
-	//	Address: os.Getenv("WX_SERVER_ADDRESS"),
-	//}
-	//res, err := cl.AccessToken(req)
-	//if err != nil {
-	//	t.Errorf("cl.AccessToken err : %v", err)
-	//}
-	//if res.Code != 200 {
-	//	t.Errorf("AccessToken client failed")
-	//}
+	req := &pb.GetAccessTokenReq{
+		AppID: "wxdd9779d0ca45ea77",
+	}
+	cl := client.Client{
+		Address: os.Getenv("WX_SERVER_ADDRESS"),
+	}
+	res, err := cl.AccessToken(req)
+	if err != nil {
+		t.Errorf("cl.AccessToken err : %v", err)
+	}
+	if res.Code != 200 {
+		t.Errorf("AccessToken client failed")
+	}
 }
