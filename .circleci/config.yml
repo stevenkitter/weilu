@@ -20,6 +20,7 @@ jobs:
       MYSQL_URL: "localhost:3306"
       WX_MYSQL_USER: "wx"
       WX_DATABASE: "wx"
+      WXAppSecret: ${WX_APP_SECRET}
     steps:
       # 构建微服务
       - checkout
