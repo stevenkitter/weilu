@@ -2,6 +2,8 @@ package server
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"github.com/stevenkitter/weilu/services/wx/httpClient"
 	"log"
 	"net"
@@ -165,5 +167,39 @@ func (s *Server) PreAuthCode(ctx context.Context, req *pb.GetPreAuthCodeReq) (*p
 	return &pb.Resp{
 		Code: 200,
 		Data: comp.Component,
+	}, nil
+}
+
+func (s *Server) AuthURL(ctx context.Context, req *pb.GetAuthURLReq) (*pb.Resp, error) {
+	device := req.Device
+	authType := req.AuthType
+	if device == "" || (device != "phone" && device != "web") {
+		log.Printf("query device is wrong device : %s", device)
+		return nil, errors.New("query device is required and must be web or phone")
+	}
+	if authType == "" || (authType != "1" && authType != "2" && authType != "3") {
+		log.Printf("query authType is wrong authType : %s", authType)
+		return nil, errors.New("query authType is required and must be 1 2 3")
+	}
+	res, err := s.PreAuthCode(ctx, &pb.GetPreAuthCodeReq{
+		AppID: wxcrypter.AppID,
+	})
+	if err != nil {
+		log.Printf("s.PreAuthCode err : %v", err)
+		return nil, err
+	}
+	authCode := res.Data
+	var url = ""
+	if device == "web" {
+		url += fmt.Sprintf("https://mp.weixin.qq.com/cgi-bin/componentloginpage?"+
+			"component_appid=%s&pre_auth_code=%s&redirect_uri=%s&auth_type=%s", wxcrypter.AppID, authCode, req.RedirectURL, authType)
+	} else {
+		url += fmt.Sprintf("https://mp.weixin.qq.com/safe/bindcomponent?action=bindcomponent&no_scan=1"+
+			"&component_appid=%s&pre_auth_code=%s&redirect_uri=%s&auth_type=%s#wechat_redirect",
+			wxcrypter.AppID, authCode, req.RedirectURL, authType)
+	}
+	return &pb.Resp{
+		Code: 200,
+		Data: url,
 	}, nil
 }

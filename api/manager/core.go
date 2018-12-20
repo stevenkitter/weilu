@@ -26,7 +26,7 @@ func (m *Manager) Route() {
 	m.Engine.POST("/wx/:appid", WrapWXHandler(endpoint.WXReceiveEndpoint))
 	v1 := m.Engine.Group("/v1")
 	{
-		v1.POST("/login", WrapHandler(endpoint.WXReceiveEndpoint))
+		v1.GET("/auth_url", WrapHandler(endpoint.AuthURL))
 	}
 	v2 := m.Engine.Group("/v2")
 	{

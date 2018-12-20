@@ -135,6 +135,26 @@ func (mr *MockWXServiceClientMockRecorder) PreAuthCode(ctx, in interface{}, opts
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PreAuthCode", reflect.TypeOf((*MockWXServiceClient)(nil).PreAuthCode), varargs...)
 }
 
+// AuthURL mocks base method
+func (m *MockWXServiceClient) AuthURL(ctx context.Context, in *proto.GetAuthURLReq, opts ...grpc.CallOption) (*proto.Resp, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "AuthURL", varargs...)
+	ret0, _ := ret[0].(*proto.Resp)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AuthURL indicates an expected call of AuthURL
+func (mr *MockWXServiceClientMockRecorder) AuthURL(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AuthURL", reflect.TypeOf((*MockWXServiceClient)(nil).AuthURL), varargs...)
+}
+
 // MockWXServiceServer is a mock of WXServiceServer interface
 type MockWXServiceServer struct {
 	ctrl     *gomock.Controller
@@ -231,4 +251,19 @@ func (m *MockWXServiceServer) PreAuthCode(arg0 context.Context, arg1 *proto.GetP
 func (mr *MockWXServiceServerMockRecorder) PreAuthCode(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PreAuthCode", reflect.TypeOf((*MockWXServiceServer)(nil).PreAuthCode), arg0, arg1)
+}
+
+// AuthURL mocks base method
+func (m *MockWXServiceServer) AuthURL(arg0 context.Context, arg1 *proto.GetAuthURLReq) (*proto.Resp, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AuthURL", arg0, arg1)
+	ret0, _ := ret[0].(*proto.Resp)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AuthURL indicates an expected call of AuthURL
+func (mr *MockWXServiceServerMockRecorder) AuthURL(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AuthURL", reflect.TypeOf((*MockWXServiceServer)(nil).AuthURL), arg0, arg1)
 }

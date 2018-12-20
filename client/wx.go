@@ -77,3 +77,16 @@ func (c *Client) PreAuthCode(req *pb.GetPreAuthCodeReq) (*pb.Resp, error) {
 	}
 	return cl.PreAuthCode(context.Background(), req)
 }
+
+func (c *Client) AuthURL(req *pb.GetAuthURLReq) (*pb.Resp, error) {
+	conn, cl, err := dialGrpc(c.Address)
+	defer func() {
+		if err := conn.Close(); err != nil {
+			log.Printf("conn.Close err : %v", err)
+		}
+	}()
+	if err != nil {
+		return nil, err
+	}
+	return cl.AuthURL(context.Background(), req)
+}

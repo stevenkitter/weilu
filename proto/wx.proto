@@ -33,17 +33,22 @@ message GetTicketReq {
 message GetAccessTokenReq {
   string appID = 1;
 }
-
+//GetPreAuthCodeReq pre_auth_code
 message GetPreAuthCodeReq {
   string appID = 1;
 }
-
-
+//AuthURLReq 授权使用的url
+message GetAuthURLReq {
+  string device = 1; //设备web phone
+  string authType = 2; // 1公众号 2小程序 3所有
+  string redirectURL = 3; //跳转链接
+}
 
 service WXService {
-  rpc DecryptMsg(WXEncryptedMessage) returns (Resp);
-  rpc TicketReceived(WXTicketReq) returns (Resp);
-  rpc Ticket(GetTicketReq) returns (Resp);
-  rpc AccessToken(GetAccessTokenReq) returns (Resp);
-  rpc PreAuthCode(GetPreAuthCodeReq) returns (Resp);
+  rpc DecryptMsg(WXEncryptedMessage) returns (Resp); //解密微信的消息
+  rpc TicketReceived(WXTicketReq) returns (Resp); //存储ticket
+  rpc Ticket(GetTicketReq) returns (Resp); // 获取ticket
+  rpc AccessToken(GetAccessTokenReq) returns (Resp); // 获取token并存储
+  rpc PreAuthCode(GetPreAuthCodeReq) returns (Resp); // 获取pre_auth_code
+  rpc AuthURL(GetAuthURLReq) returns (Resp); // 获取授权链接给用户点击跳转
 }

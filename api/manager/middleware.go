@@ -33,6 +33,7 @@ func WrapHandler(fc HandlerFunc) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		resp, err := fc(c)
 		if err != nil {
+			log.Printf("fc(c) err : %v", err)
 			c.JSON(http.StatusBadRequest, resp)
 			return
 		}
