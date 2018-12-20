@@ -5,7 +5,7 @@ workspace:
   base: /go
   path: src/github.com/stevenkitter/weilu
 
-
+# db
 services:
   - name: mariadb
     image: mariadb
