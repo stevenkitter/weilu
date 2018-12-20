@@ -1,0 +1,61 @@
+kind: pipeline
+name: default
+
+workspace:
+  base: /go
+  path: src/github.com/stevenkitter/weilu
+
+
+services:
+  - name: mariadb
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: "123123"
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+
+steps:
+  - name: init database
+    image: mariadb
+    commands:
+      - sudo apt-get update && sudo apt install -y mysql-client
+      - sleep 20
+      - sh ./wait.sh
+      - sh ./script_mysql_init/init.sh
+
+
+  - name: build go main.go
+    image: golang
+    commands:
+      - go get -v -t -d ./...
+      - pw=$PWD
+      - cd $pw/services/wx
+      - CGO_ENABLED=0 GOOS=linux go build -o app .
+      - cd $pw/api
+      - CGO_ENABLED=0 GOOS=linux go build -o app .
+  - name: run server and api
+    image: golang
+    detach: true
+    environment:
+      WXAppSecret:
+        from_secret: WXAppSecret
+      WX_MYSQL_PASSWORD:
+        from_secret: WX_MYSQL_PASSWORD
+      WX_API_SERVER_ADDRESS: "http://127.0.0.1:8100"
+      WX_SERVER_ADDRESS: 127.0.0.1:51001
+      MYSQL_URL: "localhost:3306"
+      WX_MYSQL_USER: "wx"
+      WX_DATABASE: "wx"
+    commands:
+      - go get -v -t -d ./...
+      - pw=$PWD
+      - cd $pw/services/wx
+      - WXAppSecret=$WX_APP_SECRET ./app
+      - cd $pw/api
+      - ./app
+  - name: test
+    image: golang
+    commands:
+      - go get -v -t -d ./...
+      - sleep 20
+      - go test -v ./...
