@@ -28,7 +28,7 @@ steps:
     - CGO_ENABLED=0 GOOS=linux go build -o app .
 
 
-- name: run server and api
+- name: server
   image: golang
   detach: true
   environment:
@@ -36,9 +36,9 @@ steps:
       from_secret: WXAppSecret
     WX_MYSQL_PASSWORD:
       from_secret: WX_MYSQL_PASSWORD
-    WX_API_SERVER_ADDRESS: "http://127.0.0.1:8100"
-    WX_SERVER_ADDRESS: 127.0.0.1:51001
-    MYSQL_URL: "localhost:3306"
+    WX_API_SERVER_ADDRESS: "http://server:8100"
+    WX_SERVER_ADDRESS: server:51001
+    MYSQL_URL: "mariadb:3306"
     WX_MYSQL_USER: "wx"
     WX_DATABASE: "wx"
   commands:

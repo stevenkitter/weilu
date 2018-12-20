@@ -3,7 +3,7 @@
 
 set -e
 
-until mysql -h 127.0.0.1 -uroot -p123123 -e "SELECT 1"; do
+until mysql -h mariadb -uroot -p123123 -e "SELECT 1"; do
   >&2 echo "Mysql is unavailable - sleeping"
   sleep 1
 done
