@@ -34,7 +34,7 @@ func TestClient_TicketReceived(t *testing.T) {
 	req := &pb.WXTicketReq{
 		AppID:     "wxdd9779d0ca45ea77",
 		InfoType:  "component_verify_ticket",
-		Component: "ticket@@@OR-oiXvB5nbXy5VAf2DXqWyf3zABMWUI0BBd33f8Zgdrd_YdbuqqaU_tI3j_VbV063UCMqKc8TpTQeuKiI7Hig",
+		Component: "ticket@@@TDlOXLU6CxgKO-lPl6lNh8fpeQwsjy29RrJ0YwMQMD6Zd3QO7mJeWbU485DwcODOOewkD1E3pP9-Q2XY11gjEQ",
 	}
 	cl := client.Client{
 		Address: os.Getenv("WX_SERVER_ADDRESS"),
