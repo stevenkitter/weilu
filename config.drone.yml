@@ -5,14 +5,7 @@ workspace:
   base: /go
   path: src/github.com/stevenkitter/weilu
 
-# db mariadb
-services:
-  - name: mariadb
-    image: mariadb
-    environment:
-      MYSQL_ROOT_PASSWORD: "123123"
-      MYSQL_ROOT_HOST: "%"
-      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+
 
 steps:
   - name: init database
@@ -33,6 +26,8 @@ steps:
       - CGO_ENABLED=0 GOOS=linux go build -o app .
       - cd $pw/api
       - CGO_ENABLED=0 GOOS=linux go build -o app .
+
+
   - name: run server and api
     image: golang
     detach: true
@@ -53,9 +48,20 @@ steps:
       - WXAppSecret=$WX_APP_SECRET ./app
       - cd $pw/api
       - ./app
+
+
   - name: test
     image: golang
     commands:
       - go get -v -t -d ./...
       - sleep 20
       - go test -v ./...
+
+# db mariadb
+services:
+  - name: mariadb
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: 123123
+      MYSQL_ROOT_HOST: %
+      MYSQL_ALLOW_EMPTY_PASSWORD: true
